@@ -11,7 +11,8 @@ public sealed class Scene
     public readonly SceneLoader Loader;
     public readonly AssetManager Assets;
     public readonly EventManager Events;
-    public readonly SaveFile saveFile;
+    public readonly SaveFile SaveFile;
+    public readonly InputManager Inputs;
 
     public Scene()
     {
@@ -20,7 +21,11 @@ public sealed class Scene
         Loader = new SceneLoader();
         Assets = new AssetManager();
         Events = new EventManager();
-        saveFile = new SaveFile("SaveFile");
+        SaveFile = new SaveFile("SaveFile");
+        Inputs = new InputManager(new List<string>(){"Space"});
+        
+        Spawn(new Player());
+        Spawn(new Enemy());
     }
 
     public void Spawn(Entity entity)
@@ -39,7 +44,8 @@ public sealed class Scene
         {
             entities[i].Update(this, deltaTime);
         }
-
+        
+        Inputs.Update(this);
         Events.Update(this, deltaTime);
         
         for (int i = entities.Count - 1; i >= 0; i--)
