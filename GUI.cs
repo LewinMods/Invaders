@@ -27,7 +27,7 @@ public class GUI : Entity
 
     public override void Create(Scene scene)
     {
-        highScore = scene.saveFile.Load();
+        highScore = scene.SaveFile.Load();
         
         base.Create(scene);
         sprite.TextureRect = new IntRect(72, 36, 18, 18);
@@ -42,9 +42,6 @@ public class GUI : Entity
         highScoreText.Scale = new Vector2f(0.5f, 0.5f);
         
         currentHealth = maxHealth;
-        
-        scene.Events.LoseHealth += OnLoseHealth;
-        scene.Events.GainScore += OnScoreGain;
     }
 
     public override void Render(RenderTarget target)
@@ -81,7 +78,7 @@ public class GUI : Entity
             if (currentScore > highScore)
             {
                 highScore = currentScore;
-                scene.saveFile.Save(highScore);
+                scene.SaveFile.Save(highScore);
             }
 
             currentScore = 0;

@@ -8,18 +8,16 @@ namespace Invaders
 {
     class Program 
     {
+        public static uint ScreenWidth = 450, ScreenHeight = 900;
+        
         static void Main(string[] args) 
         {
             using (var window = new RenderWindow(
-                       new VideoMode(828, 900), "Pacman")) 
+                       new VideoMode(ScreenWidth, ScreenHeight), "Invaders")) 
             {
                 window.Closed += (o, e) => window.Close();
                 
                 window.SetFramerateLimit(60);
-                
-                window.SetView(new View(
-                    new FloatRect(18,0,414,450)
-                ));
 
                 Scene scene = new Scene();
 

@@ -2,14 +2,10 @@
 
 namespace Invaders;
 
-public delegate void InputEvent(Scene scene, string key);
-
 public class InputManager
 {
     private Dictionary<string, bool> previousKeyStates = new();
     private List<string> keys;
-    
-    public event InputEvent InputHit;
 
     public InputManager(List<string> keys)
     {
@@ -32,7 +28,7 @@ public class InputManager
                 
                 if (isPressed && !wasPressed)
                 {
-                    InputHit?.Invoke(scene, key);
+                    scene.Events.PublishInputHit(key);
                 }
                 
                 previousKeyStates[key] = isPressed;
