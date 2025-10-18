@@ -9,7 +9,7 @@ public class Bullet : Movable
     private Actor parent;
     private Vector2f dir;
     
-    public Bullet(Actor parent, Vector2f dir) : base("spaceship")
+    public Bullet(Actor parent, Vector2f dir) : base("bullet")
     {
         this.parent = parent;
         this.dir = dir;
@@ -17,13 +17,16 @@ public class Bullet : Movable
     
     public override void Create(Scene scene)
     {
-        sprite.TextureRect = new IntRect(55, 40, 150, 220);
-        sprite.Scale = new Vector2f(0.1f, 0.1f);
-        sprite.Color = Color.Yellow;
-        
-        Position = parent.GunPosition - new Vector2f((sprite.GetGlobalBounds().Size.X) / 2, 0);
+        sprite.TextureRect = new IntRect(0, 0, 40, 69);
+        sprite.Scale = new Vector2f(0.5f, 0.5f);
 
         Direction = dir;
+        
+        sprite.Rotation = parent.sprite.Rotation;
+        
+        sprite.Origin = sprite.GetLocalBounds().Size / 2;
+        
+        Position = parent.GunPosition;
         
         base.Create(scene);
         

@@ -8,7 +8,7 @@ namespace Invaders
 {
     class Program 
     {
-        public static uint ScreenWidth = 450, ScreenHeight = 900;
+        public static uint ScreenWidth = 600, ScreenHeight = 900;
         
         static void Main(string[] args) 
         {
@@ -32,7 +32,7 @@ namespace Invaders
 
                     scene.UpdateAll(deltaTime);
 
-                    window.Clear(new Color(11, 75, 255));
+                    window.Clear(new Color(7, 0, 15));
 
                     scene.RenderAll(window);
 
