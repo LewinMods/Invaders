@@ -8,18 +8,21 @@ public class Enemy : Actor
 {
     private Clock clock;
     
-    public Enemy() : base("spaceship")
+    public Enemy() : base("enemy")
     {
         clock = new Clock();
+        ZIndex = 1;
     }
 
     public override void Create(Scene scene)
     {
-        sprite.TextureRect = new IntRect(55, 40, 150, 220);
-        sprite.Scale = new Vector2f(0.7f, 0.7f);
-        sprite.Color = Color.Red;
+        movingFrame = new IntRect(0, 0, 130, 250);
+        sprite.TextureRect = movingFrame;
         
-        Position = new Vector2f((Program.ScreenWidth - sprite.GetGlobalBounds().Size.X) / 2, -sprite.GetGlobalBounds().Size.Y);
+        sprite.Scale = new Vector2f(0.7f, 0.7f);
+        sprite.Origin = sprite.GetLocalBounds().Size / 2;
+        
+        Position = new Vector2f(Program.ScreenWidth / 2 - sprite.Origin.X, -sprite.Origin.Y);
         
         base.Create(scene);
         
@@ -32,18 +35,20 @@ public class Enemy : Actor
 
     public override void Update(Scene scene, float deltaTime)
     {
+        if (Position.X >= Program.ScreenWidth - sprite.Origin.X)
+        {
+            Direction = new Vector2f(-1, 1);
+            RotateTowardsDirection();
+        }
+        if (Position.X <= sprite.Origin.X)
+        {
+            Direction = new Vector2f(1, 1);
+            RotateTowardsDirection();
+        }
+        
         if (clock.ElapsedTime.AsMilliseconds() >= ShootCooldown)
         {
             Shoot(scene);
-        }
-        
-        if (Position.X >= Program.ScreenWidth - sprite.GetGlobalBounds().Size.X)
-        {
-            Direction = new Vector2f(-1, 1);
-        }
-        if (Position.X <= 0)
-        {
-            Direction = new Vector2f(1, 1);
         }
         
         if (Position.Y >= Program.ScreenHeight)
@@ -67,11 +72,13 @@ public class Enemy : Actor
                 Direction = new Vector2f(-1, 1);
                 break;
         }
+
+        RotateTowardsDirection();
     }
     
     private void Shoot(Scene scene)
     {
-        GunPosition = Position + new Vector2f(sprite.GetGlobalBounds().Size.X / 2, sprite.GetGlobalBounds().Size.Y);
+        GunPosition = Position;
         
         scene.Spawn(new Bullet(this, Direction));
         RestartShootTimer();
@@ -81,5 +88,17 @@ public class Enemy : Actor
     {
         clock.Restart();
         ShootCooldown = new Random().Next(500, 2001);
+    }
+
+    private void RotateTowardsDirection()
+    {
+        if (Direction == (1, 1))
+        {
+            sprite.Rotation = 135;
+        }
+        else
+        {
+            sprite.Rotation = 225;
+        }
     }
 }
