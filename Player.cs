@@ -55,7 +55,7 @@ public class Player : Actor
             Direction += new Vector2f(1, 0);
         }
         
-        Position = new Vector2f(Math.Clamp(Position.X, 0, Program.ScreenWidth - Bounds.Width), Math.Clamp(Position.Y, 0, Program.ScreenHeight - Bounds.Height));
+        Position = new Vector2f(Math.Clamp(Position.X, 0, Program.ScreenWidth - WorldHitbox.Width - 36), Math.Clamp(Position.Y, 0, Program.ScreenHeight - WorldHitbox.Height - 36));
     }
 
     private void Shoot(Scene scene, string key)
@@ -76,14 +76,5 @@ public class Player : Actor
         ShootCooldown = 500;
     }
     
-    public override FloatRect Bounds
-    {
-        get
-        {
-            var bounds = base.Bounds;
-            bounds.Width = 140;
-            bounds.Height = 132;
-            return bounds;
-        }
-    }
+    protected override FloatRect LocalHitbox => new FloatRect(50, 50, 150, 140);
 }

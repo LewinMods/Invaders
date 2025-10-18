@@ -11,6 +11,8 @@ public class Animation
 
     private float time;
     private int iteration = 0;
+
+    private static float frameTime = 50;
     
     public Animation(List<IntRect> frames)
     {
@@ -20,7 +22,7 @@ public class Animation
 
         chosen = frames[0];
 
-        time = 125;
+        time = frameTime;
     }
 
     public IntRect UpdateAnimation()
@@ -38,7 +40,7 @@ public class Animation
             chosen = frames[iteration];
             iteration++;
             
-            time = 125;
+            time = frameTime;
         }
         return chosen;
     }

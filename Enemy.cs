@@ -27,7 +27,7 @@ public class Enemy : Actor
         base.Create(scene);
         
         Speed = 200;
-        Health = 5;
+        Health = 1;
 
         PickDirection();
         RestartShootTimer();
@@ -51,7 +51,7 @@ public class Enemy : Actor
             Shoot(scene);
         }
         
-        if (Position.Y >= Program.ScreenHeight)
+        if (Position.Y >= Program.ScreenHeight + WorldHitbox.Height)
         {
             Reset();
         }
@@ -101,4 +101,6 @@ public class Enemy : Actor
             sprite.Rotation = 225;
         }
     }
+    
+    protected override FloatRect LocalHitbox => new FloatRect(45, 0, 45, 150);
 }

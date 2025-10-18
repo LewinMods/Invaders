@@ -32,6 +32,11 @@ public abstract class Actor : Movable
     public override void Update(Scene scene, float deltaTime)
     {
         base.Update(scene, deltaTime);
+        
+        foreach (Entity found in scene.FindIntersects(WorldHitbox))
+        {
+            CollideWith(scene, found);
+        }
 
         if (Direction != new Vector2f(0, 0))
         {
@@ -41,5 +46,31 @@ public abstract class Actor : Movable
         {
             sprite.TextureRect = stillFrame;
         }
+    }
+    
+    protected override void CollideWith(Scene scene, Entity other)
+    {
+        if (other is Bullet bullet && bullet.parent != this)
+        {
+            bullet.Dead = true;
+            Health -= 1;
+        }
+
+        else if (other is Player player || other is Enemy enemy)
+        {
+            Health -= 1;
+        }
+        
+        if (Health <= 0)
+        {
+            Explode(scene, this);
+        }
+    }
+
+    private void Explode(Scene scene, Actor hit)
+    {
+        scene.Spawn(new Explosion() {Position = hit.Position});
+        
+        Dead = true;
     }
 }

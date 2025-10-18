@@ -24,8 +24,6 @@ public abstract class Entity
         set => sprite.Position = value;
     }
 
-    public virtual FloatRect Bounds => sprite.GetGlobalBounds();
-
     public virtual bool Solid => false;
 
     public virtual void Create(Scene scene)
@@ -35,10 +33,7 @@ public abstract class Entity
 
     public virtual void Update(Scene scene, float deltaTime)
     {
-        foreach (Entity found in scene.FindIntersects(Bounds))
-        {
-            CollideWith(scene, found);
-        }
+        
     }
 
     public virtual void Render(RenderTarget target)
@@ -55,4 +50,15 @@ public abstract class Entity
     {
         
     }
+    
+    public FloatRect WorldHitbox
+    {
+        get
+        {
+            var transform = sprite.Transform;
+            return transform.TransformRect(LocalHitbox);
+        }
+    }
+
+    protected virtual FloatRect LocalHitbox => new FloatRect(0, 0, sprite.TextureRect.Width, sprite.TextureRect.Height);
 }

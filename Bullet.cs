@@ -6,7 +6,7 @@ namespace Invaders;
 
 public class Bullet : Movable
 {
-    private Actor parent;
+    public Actor parent;
     private Vector2f dir;
     
     public Bullet(Actor parent, Vector2f dir) : base("bullet")
