@@ -103,8 +103,11 @@ public sealed class Scene
         for (int i = lastEntity; i >= 0; i--)
         {
             Entity entity = entities[i];
+            
             if (entity.Dead) continue;
-            if (entity.Bounds.Intersects(bounds))
+            if (entity.WorldHitbox == bounds) continue;
+            
+            if (entity.WorldHitbox.Intersects(bounds))
             {
                 yield return entity;
             }
