@@ -10,25 +10,37 @@ public class Animation
     private Clock clock;
 
     private float time;
-    private int iteration = 0;
-
     private static float frameTime = 50;
     
-    public Animation(List<IntRect> frames)
+    private int iteration = 0;
+
+    private bool oneLoop;
+    
+    public Animation(List<IntRect> frames, bool value)
     {
         clock = new Clock();
         
         this.frames = frames;
-
         chosen = frames[0];
+        
+        oneLoop = value;
 
         time = frameTime;
     }
 
     public IntRect UpdateAnimation()
     {
-        time -= clock.ElapsedTime.AsMilliseconds();
-        clock.Restart();
+        if (oneLoop && iteration >= frames.Count)
+        {
+            clock.Dispose();
+            
+            return new IntRect();
+        }
+        else
+        {
+           time -= clock.ElapsedTime.AsMilliseconds();
+           clock.Restart(); 
+        }
         
         if (time <= 0)
         {
@@ -42,15 +54,7 @@ public class Animation
             
             time = frameTime;
         }
+        
         return chosen;
-    }
-
-    public void ChangeFrames(List<IntRect> newFrames)
-    {
-        if (newFrames != null && newFrames != frames)
-        {
-            frames = newFrames;
-            iteration = 0;
-        }
     }
 }

@@ -103,4 +103,11 @@ public class Enemy : Actor
     }
     
     protected override FloatRect LocalHitbox => new FloatRect(45, 0, 45, 150);
+
+    protected override void CollideWith(Scene scene, Entity other)
+    {
+        if (other is Enemy) return;
+        
+        base.CollideWith(scene, other);
+    }
 }

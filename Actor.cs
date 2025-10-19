@@ -69,7 +69,7 @@ public abstract class Actor : Movable
 
     private void Explode(Scene scene, Actor hit)
     {
-        scene.Spawn(new Explosion() {Position = hit.Position});
+        scene.Spawn(new Explosion() {Position = hit.Position - new Vector2f(323 / 4, 347 / 4)});
         
         Dead = true;
     }
