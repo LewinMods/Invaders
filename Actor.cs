@@ -50,13 +50,15 @@ public abstract class Actor : Movable
     
     protected override void CollideWith(Scene scene, Entity other)
     {
+        if (!(other is Bullet || other is Player || other is Enemy)) return;
+        
         if (other is Bullet bullet && bullet.parent != this)
         {
             bullet.Dead = true;
             Health -= 1;
         }
 
-        else if (other is Player player || other is Enemy enemy)
+        else if (other is Player || other is Enemy)
         {
             Health -= 1;
         }
@@ -70,7 +72,10 @@ public abstract class Actor : Movable
     private void Explode(Scene scene, Actor hit)
     {
         scene.Spawn(new Explosion() {Position = hit.Position - new Vector2f(380 / 4, 347 / 4)});
-        
-        Dead = true;
+
+        if (hit is Enemy)
+        {
+            Dead = true;
+        }
     }
 }

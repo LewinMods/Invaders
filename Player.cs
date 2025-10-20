@@ -7,10 +7,17 @@ namespace Invaders;
 public class Player : Actor
 {
     private Clock clock;
+    private Clock damageClock;
+
+    private Vector2f gunPosition2;
+    
+    private bool invulnerable = false;
+    private int invulnerableTimer = 500;
     
     public Player() : base("player")
     {
         clock = new Clock();
+        damageClock = new Clock();
         ZIndex = 1;
     }
 
@@ -35,6 +42,12 @@ public class Player : Actor
     public override void Update(Scene scene, float deltaTime)
     {
         base.Update(scene, deltaTime);
+
+        if (invulnerable && damageClock.ElapsedTime.AsMilliseconds() > invulnerableTimer)
+        {
+            invulnerable = false;
+            sprite.Color = Color.White;
+        }
         
         Direction = new Vector2f(0, 0);
         
@@ -62,9 +75,11 @@ public class Player : Actor
     {
         if (key == "Space" && clock.ElapsedTime.AsMilliseconds() >= ShootCooldown)
         {
-            GunPosition = Position + new Vector2f(sprite.GetGlobalBounds().Size.X / 2, 0);
+            GunPosition = Position + new Vector2f(sprite.GetGlobalBounds().Size.X / 4, 0);
+            gunPosition2 = Position + new Vector2f(sprite.GetGlobalBounds().Size.X / 1.25f, 0);
             
-            scene.Spawn(new Bullet(this, new Vector2f(0, -1)));
+            scene.Spawn(new Bullet(this, new Vector2f(0, -1), GunPosition));
+            scene.Spawn(new Bullet(this, new Vector2f(0, -1), gunPosition2));
             
             RestartShootTimer();
         }
@@ -76,5 +91,31 @@ public class Player : Actor
         ShootCooldown = 500;
     }
     
-    protected override FloatRect LocalHitbox => new FloatRect(50, 50, 150, 140);
+    protected override FloatRect LocalHitbox => new FloatRect(50, 50, 170, 140);
+
+    protected override void CollideWith(Scene scene, Entity other)
+    {
+        if (other is Explosion) return;
+        if (invulnerable) return;
+        
+        Console.WriteLine(other.ToString());
+        
+        base.CollideWith(scene, other);
+        
+        if (Health <= 0)
+        {
+            scene.EndGame();
+        }
+        
+        sprite.Color = Color.Red;
+        invulnerable = true;
+        damageClock.Restart();
+    }
+
+    public override void Destroy(Scene scene)
+    {
+        base.Destroy(scene);
+        
+        scene.Events.InputHit -= Shoot;
+    }
 }

@@ -8,11 +8,18 @@ public class Bullet : Movable
 {
     public Actor parent;
     private Vector2f dir;
+    private Vector2f pos;
     
-    public Bullet(Actor parent, Vector2f dir) : base("bullet")
+    private static Clock clock = new Clock();
+    private float time;
+    
+    public Bullet(Actor parent, Vector2f dir, Vector2f pos) : base("bullet")
     {
         this.parent = parent;
         this.dir = dir;
+        this.pos = pos;
+        
+        time = clock.ElapsedTime.AsSeconds();
     }
     
     public override void Create(Scene scene)
@@ -26,10 +33,20 @@ public class Bullet : Movable
         
         sprite.Origin = sprite.GetLocalBounds().Size / 2;
         
-        Position = parent.GunPosition;
+        Position = pos;
         
         base.Create(scene);
         
         Speed = 500;
+    }
+
+    public override void Update(Scene scene, float deltaTime)
+    {
+        base.Update(scene, deltaTime);
+
+        if (clock.ElapsedTime.AsSeconds() > time + 10)
+        {
+            Dead = true;
+        }
     }
 }

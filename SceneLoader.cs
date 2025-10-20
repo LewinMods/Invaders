@@ -13,8 +13,8 @@ public static class SceneLoader
                 break;
             
             case GAMESTATE.GAMESCREEN:
-                scene.Spawn(new Player());
-                scene.Spawn(new Enemy());
+                scene.StartGame();
+                scene.Spawn(new GameGUI());
                 break;
             
             case GAMESTATE.HIGHSCOREMENU: 
@@ -22,6 +22,8 @@ public static class SceneLoader
                 break;
             
             case GAMESTATE.DEATHMENU:
+                scene.clock = null;
+                scene.Spawn(new DeathMenuGUI());
                 break;
         }
     }

@@ -10,7 +10,7 @@ public class Animation
     private Clock clock;
 
     private float time;
-    private static float frameTime = 50;
+    private static float frameTime = 75;
     
     private int iteration = 0;
 
