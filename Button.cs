@@ -45,7 +45,7 @@ public class Button : Entity
     {
         if (isHovered && key == "Enter")
         {
-            SceneLoader.InitiateScene(scene, gameState);
+            scene.nextScene = gameState;
         }
     }
 
@@ -59,7 +59,7 @@ public class Button : Entity
         }
         else
         {
-            sprite.Color = Color.Blue;
+            sprite.Color = Color.Black;
         }
         
     }

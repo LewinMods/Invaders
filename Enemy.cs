@@ -21,8 +21,11 @@ public class Enemy : Actor
         
         sprite.Scale = new Vector2f(0.7f, 0.7f);
         sprite.Origin = sprite.GetLocalBounds().Size / 2;
+
+        int x = new Random().Next((int)MathF.Ceiling(sprite.Origin.X), (int)MathF.Floor(Program.ScreenWidth - sprite.Origin.X));
+        int y = new Random().Next(-700, (int)MathF.Ceiling(-sprite.Origin.Y));
         
-        Position = new Vector2f(Program.ScreenWidth / 2 - sprite.Origin.X, -sprite.Origin.Y);
+        Position = new Vector2f(x, y);
         
         base.Create(scene);
         
@@ -80,7 +83,7 @@ public class Enemy : Actor
     {
         GunPosition = Position;
         
-        scene.Spawn(new Bullet(this, Direction));
+        scene.Spawn(new Bullet(this, Direction, GunPosition));
         RestartShootTimer();
     }
 
@@ -106,7 +109,9 @@ public class Enemy : Actor
 
     protected override void CollideWith(Scene scene, Entity other)
     {
+        if (other is Explosion) return;
         if (other is Enemy) return;
+        if (other is Bullet bullet && bullet.parent is Enemy) return;
         
         base.CollideWith(scene, other);
     }

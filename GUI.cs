@@ -43,7 +43,10 @@ public abstract class GUI : Entity
             buttons[i].Position += new Vector2f((Program.ScreenWidth - buttons[i].sprite.GetGlobalBounds().Size.X) / 2, 0);
         }
 
-        buttons[0].isHovered = true;
+        if (buttons.Length > 0)
+        {
+            buttons[0].isHovered = true;
+        }
     }
 
     private void CycleButtons(Scene scene, string key)

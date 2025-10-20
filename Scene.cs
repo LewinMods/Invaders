@@ -13,7 +13,13 @@ public sealed class Scene
     public readonly SaveFile SaveFile;
     public readonly InputManager Inputs;
 
+    public Clock? clock;
+    private int bufferTime = 2000;
+    private float scoreTime = 0;
+    
     public int Score;
+    
+    public GAMESTATE? nextScene = null;
 
     public Scene()
     {
@@ -24,7 +30,7 @@ public sealed class Scene
         SaveFile = new SaveFile("SaveFile");
         Inputs = new InputManager(new List<string>(){"Space", "Enter", "W", "S"});
         
-        SceneLoader.InitiateScene(this, GAMESTATE.MAINMENU);
+        nextScene = GAMESTATE.MAINMENU;
     }
 
     public void Spawn(Entity entity)
@@ -53,6 +59,31 @@ public sealed class Scene
                 entities.RemoveAt(i);
                 entity.Destroy(this);
             }
+        }
+        
+        if (clock != null)
+        {
+            scoreTime += deltaTime;
+            
+            if (scoreTime >= 1)
+            {
+                Score += 1;
+                scoreTime -= 1;
+            }
+            
+            if (clock.ElapsedTime.AsMilliseconds() > bufferTime)
+            {
+                clock.Restart();
+                Spawn(new Enemy());
+                
+                bufferTime = Math.Clamp((int)MathF.Floor(bufferTime * 0.98f), 300, 1000);
+            }
+        }
+        
+        if (nextScene.HasValue)
+        {
+            SceneLoader.InitiateScene(this, nextScene.Value);
+            nextScene = null;
         }
     }
 
@@ -106,5 +137,21 @@ public sealed class Scene
                 yield return entity;
             }
         }
+    }
+
+    public void StartGame()
+    {
+        bufferTime = 2000;
+        
+        Spawn(new Player());
+        Spawn(new Enemy());
+
+        clock = new Clock();
+    }
+
+    public void EndGame()
+    {
+        nextScene = GAMESTATE.DEATHMENU;
+        Console.Clear();
     }
 }
