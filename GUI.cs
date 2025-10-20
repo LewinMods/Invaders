@@ -1,94 +1,95 @@
-﻿using SFML.Graphics;
+﻿using System.Numerics;
+using SFML.Graphics;
 using SFML.System;
 
 namespace Invaders;
 
-public class GUI : Entity
+public abstract class GUI : Entity
 {
-    private Text scoreText;
-    private Text highScoreText;
-    
-    private const int maxHealth = 5;
-    private int currentHealth;
-    private int currentScore;
-    
-    private int highScore;
-    
-    public GUI() : base("pacman")
-    {
-        scoreText = new Text();
-        highScoreText = new Text();
-        
-        currentHealth = maxHealth;
-        currentScore = 0;
+    private Text titleText;
+    protected string title;
 
-        DontDestroyOnLoad = true;
+    protected int buttonAmount;
+    
+    protected Button[] buttons;
+    
+    protected GUI(string textureName) : base(textureName)
+    {
+        titleText = new Text();
     }
 
     public override void Create(Scene scene)
     {
-        highScore = scene.SaveFile.Load();
+        buttons = new Button[buttonAmount];
+        titleText.Font = scene.Assets.LoadFont("ARIAL");
+        titleText.DisplayedString = title;
+        titleText.Position = new Vector2f((Program.ScreenWidth - titleText.GetGlobalBounds().Width) / 2, titleText.GetGlobalBounds().Height * 2f);
         
-        base.Create(scene);
-        sprite.TextureRect = new IntRect(72, 36, 18, 18);
-        
-        scoreText.Font = scene.Assets.LoadFont("pixel-font");
-        highScoreText.Font = scene.Assets.LoadFont("pixel-font");
-        
-        scoreText.DisplayedString = "Score";
-        scoreText.Scale = new Vector2f(0.5f, 0.5f);
-        
-        highScoreText.DisplayedString = "HighScore";
-        highScoreText.Scale = new Vector2f(0.5f, 0.5f);
-        
-        currentHealth = maxHealth;
+        scene.Events.InputHit += CycleButtons;
     }
 
     public override void Render(RenderTarget target)
     {
-        sprite.Position = new Vector2f(36, 396);
+        base.Render(target);
         
-        for (int i = 0; i < maxHealth; i++)
+        target.Draw(titleText);
+    }
+    
+    protected void CreateButtons(Scene scene)
+    {
+        for (int i = 0; i < buttons.Length; i++)
         {
-            sprite.TextureRect = i < currentHealth
-                ? new IntRect(72, 36, 18, 18)
-                : new IntRect(72, 0, 18, 18);
-
-            base.Render(target);
-
-            sprite.Position += new Vector2f(18, 0);
+            scene.Spawn(buttons[i]);
+            buttons[i].Position += new Vector2f((Program.ScreenWidth - buttons[i].sprite.GetGlobalBounds().Size.X) / 2, 0);
         }
 
-        scoreText.DisplayedString = $"Score: {currentScore}";
-        scoreText.Position = new Vector2f(408 - scoreText.GetGlobalBounds().Width, 396);
-        
-        highScoreText.DisplayedString = $"HighScore: {highScore}";
-        highScoreText.Position = new Vector2f(408 - highScoreText.GetGlobalBounds().Width, 416);
-        
-        target.Draw(scoreText);
-        target.Draw(highScoreText);
+        buttons[0].isHovered = true;
     }
 
-    private void OnLoseHealth(Scene scene, int amount)
+    private void CycleButtons(Scene scene, string key)
     {
-        currentHealth += amount;
-
-        if (currentHealth <= 0)
+        switch (key)
         {
-            if (currentScore > highScore)
-            {
-                highScore = currentScore;
-                scene.SaveFile.Save(highScore);
-            }
-
-            currentScore = 0;
+            case "S":
+                for (int i = buttons.Length - 1; i >= 0; i--)
+                {
+                    if (buttons[i].isHovered)
+                    {
+                        buttons[i].isHovered = false;
+                        
+                        if (i == buttons.Length - 1)
+                        {
+                            buttons[0].isHovered = true;
+                            break;
+                        }
+                        
+                        buttons[i + 1].isHovered = true;
+                    }
+                }
+                break;
             
-            currentHealth  = maxHealth;
+            case "W":
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    if (buttons[i].isHovered)
+                    {
+                        buttons[i].isHovered = false;
+                        
+                        if (i == 0)
+                        {
+                            buttons[buttons.Length - 1].isHovered = true;
+                            break;
+                        }
+                        
+                        buttons[i - 1].isHovered = true;
+                    }
+                }
+                break;
         }
     }
 
-    private void OnScoreGain(Scene scene, int amount)
+    public override void Destroy(Scene scene)
     {
-        currentScore += amount;
+        scene.Events.InputHit -= CycleButtons;
     }
 }

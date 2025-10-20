@@ -8,24 +8,23 @@ public sealed class Scene
 {
     private List<Entity> entities;
     
-    public readonly SceneLoader Loader;
     public readonly AssetManager Assets;
     public readonly EventManager Events;
     public readonly SaveFile SaveFile;
     public readonly InputManager Inputs;
 
+    public int Score;
+
     public Scene()
     {
         entities = new List<Entity>();
         
-        Loader = new SceneLoader();
         Assets = new AssetManager();
         Events = new EventManager();
         SaveFile = new SaveFile("SaveFile");
-        Inputs = new InputManager(new List<string>(){"Space"});
+        Inputs = new InputManager(new List<string>(){"Space", "Enter", "W", "S"});
         
-        Spawn(new Player());
-        Spawn(new Enemy());
+        SceneLoader.InitiateScene(this, GAMESTATE.MAINMENU);
     }
 
     public void Spawn(Entity entity)
@@ -38,8 +37,6 @@ public sealed class Scene
 
     public void UpdateAll(float deltaTime)
     {
-        Loader.HandleSceneLoad(this);
-        
         for (int i = entities.Count - 1; i >= 0; i--)
         {
             entities[i].Update(this, deltaTime);
@@ -87,12 +84,9 @@ public sealed class Scene
         for (int i = entities.Count - 1; i >= 0; i--)
         {
             Entity entity = entities[i];
-
-            if (!entity.DontDestroyOnLoad)
-            {
-                entities.RemoveAt(i);
-                entity.Destroy(this);
-            }
+            
+            entities.RemoveAt(i);
+            entity.Destroy(this);
         }
     }
 

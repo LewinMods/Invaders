@@ -10,8 +10,6 @@ public abstract class Entity
     public bool Dead = false;
     public int ZIndex = 0;
 
-    public bool DontDestroyOnLoad;
-
     protected Entity(string textureName)
     {
         this.textureName = textureName;
