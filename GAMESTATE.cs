@@ -5,5 +5,6 @@ public enum GAMESTATE
     GAMESCREEN,
     MAINMENU,
     HIGHSCOREMENU,
-    DEATHMENU
+    DEATHMENU,
+    CLOSE,
 }

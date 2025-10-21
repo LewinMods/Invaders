@@ -6,14 +6,14 @@ public class InputManager
 {
     private Dictionary<Keyboard.Key, bool> KeyStates = new();
 
-    public InputManager(Window window)
+    public InputManager()
     {
-        window.KeyPressed += (sender, args) =>
+        Program.window.KeyPressed += (sender, args) =>
         {
             KeyStates[args.Code] = true;
         };
         
-        window.KeyReleased += (sender, args) =>
+        Program.window.KeyReleased += (sender, args) =>
         {
             KeyStates[args.Code] = false;
         };

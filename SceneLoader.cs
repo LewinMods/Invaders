@@ -25,6 +25,9 @@ public static class SceneLoader
                 scene.clock = null;
                 scene.Spawn(new DeathMenuGUI());
                 break;
+            case GAMESTATE.CLOSE:
+                scene.Spawn(new Close());
+                break;
         }
     }
 }

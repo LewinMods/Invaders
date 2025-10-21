@@ -4,22 +4,24 @@ using SFML.System;
 using SFML.Window;
 using System;
 
-namespace Invaders 
-{
+namespace Invaders;
+    
     class Program 
     {
+        public static RenderWindow window;
+        
         public static uint ScreenWidth = 600, ScreenHeight = 900;
         
         static void Main(string[] args) 
         {
-            using (var window = new RenderWindow(
+            using (window = new RenderWindow(
                        new VideoMode(ScreenWidth, ScreenHeight), "Invaders")) 
             {
                 window.Closed += (o, e) => window.Close();
                 
                 window.SetFramerateLimit(60);
 
-                Scene scene = new Scene(window);
+                Scene scene = new Scene();
 
                 Clock clock = new Clock();
                 
@@ -41,4 +43,3 @@ namespace Invaders
             }
         }
     }
-}
