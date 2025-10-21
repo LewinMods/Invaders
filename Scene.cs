@@ -23,14 +23,14 @@ public sealed class Scene
     
     private List<Actor> actors = new List<Actor>();
 
-    public Scene(Window window)
+    public Scene()
     {
         entities = new List<Entity>();
         
         Assets = new AssetManager();
         Events = new EventManager();
         SaveFile = new SaveFile("SaveFile");
-        Inputs = new InputManager(window);
+        Inputs = new InputManager();
         
         nextScene = GAMESTATE.MAINMENU;
 
@@ -78,7 +78,7 @@ public sealed class Scene
             
             if (scoreTime >= 1)
             {
-                Score += 1;
+                Score += 10;
                 scoreTime -= 1;
             }
             

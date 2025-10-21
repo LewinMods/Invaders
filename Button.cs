@@ -9,6 +9,8 @@ public class Button : Entity
     private GAMESTATE gameState;
     private string name;
 
+    public bool lastFrameWasHovered = false;
+
     public Text buttonText;
 
     public Button(GAMESTATE gameState, string name) : base("button")
@@ -28,8 +30,13 @@ public class Button : Entity
         
         buttonText.Font = scene.Assets.LoadFont("ARIAL");
         buttonText.DisplayedString = name;
+        
+        FloatRect bounds = buttonText.GetLocalBounds();
+        buttonText.Origin = new Vector2f(bounds.Width / 2f, bounds.Height / 2f);
 
-        buttonText.Position = Position;
+        buttonText.Position = Position +  new Vector2f(sprite.GetGlobalBounds().Width / 2f, sprite.GetGlobalBounds().Height / 2f);
+        
+        sprite.Position += new Vector2f(10, 25);
 
         scene.Events.InputHit += ButtonPress;
     }
@@ -43,7 +50,7 @@ public class Button : Entity
 
     private void ButtonPress(Scene scene, string key)
     {
-        if (isHovered && key == "Enter")
+        if (isHovered && key == "Enter" && lastFrameWasHovered == isHovered)
         {
             scene.nextScene = gameState;
         }
@@ -52,6 +59,8 @@ public class Button : Entity
     public override void Update(Scene scene, float deltaTime)
     {
         base.Update(scene, deltaTime);
+        
+        lastFrameWasHovered = isHovered;
 
         if (isHovered)
         {
