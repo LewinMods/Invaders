@@ -19,7 +19,7 @@ namespace Invaders
                 
                 window.SetFramerateLimit(60);
 
-                Scene scene = new Scene();
+                Scene scene = new Scene(window);
 
                 Clock clock = new Clock();
                 

@@ -20,17 +20,21 @@ public sealed class Scene
     public int Score;
     
     public GAMESTATE? nextScene = null;
+    
+    private List<Actor> actors = new List<Actor>();
 
-    public Scene()
+    public Scene(Window window)
     {
         entities = new List<Entity>();
         
         Assets = new AssetManager();
         Events = new EventManager();
         SaveFile = new SaveFile("SaveFile");
-        Inputs = new InputManager(new List<string>(){"Space", "Enter", "W", "S"});
+        Inputs = new InputManager(window);
         
         nextScene = GAMESTATE.MAINMENU;
+
+        Events.TakeDamage += DealDamage;
     }
 
     public void Spawn(Entity entity)
@@ -50,6 +54,13 @@ public sealed class Scene
         
         Inputs.Update(this);
         Events.Update(this, deltaTime);
+        
+        foreach (Actor actor in actors)
+        {
+            actor.Health -= 1;
+        }
+        
+        actors.Clear();
         
         for (int i = entities.Count - 1; i >= 0; i--)
         {
@@ -76,7 +87,7 @@ public sealed class Scene
                 clock.Restart();
                 Spawn(new Enemy());
                 
-                bufferTime = Math.Clamp((int)MathF.Floor(bufferTime * 0.98f), 300, 1000);
+                bufferTime = Math.Clamp((int)MathF.Floor(bufferTime * 0.98f), 500, 1000);
             }
         }
         
@@ -141,6 +152,8 @@ public sealed class Scene
 
     public void StartGame()
     {
+        Score = 0;
+        
         bufferTime = 2000;
         
         Spawn(new Player());
@@ -152,6 +165,10 @@ public sealed class Scene
     public void EndGame()
     {
         nextScene = GAMESTATE.DEATHMENU;
-        Console.Clear();
+    }
+
+    private void DealDamage(Actor actor)
+    {
+        actors.Add(actor);
     }
 }

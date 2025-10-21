@@ -41,6 +41,7 @@ public abstract class GUI : Entity
         {
             scene.Spawn(buttons[i]);
             buttons[i].Position += new Vector2f((Program.ScreenWidth - buttons[i].sprite.GetGlobalBounds().Size.X) / 2, 0);
+            buttons[i].buttonText.Position += new Vector2f((Program.ScreenWidth - buttons[i].sprite.GetGlobalBounds().Size.X) / 2, 0);
         }
 
         if (buttons.Length > 0)
@@ -49,7 +50,7 @@ public abstract class GUI : Entity
         }
     }
 
-    private void CycleButtons(Scene scene, string key)
+    protected void CycleButtons(Scene scene, string key)
     {
         switch (key)
         {

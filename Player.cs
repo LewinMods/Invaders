@@ -42,7 +42,14 @@ public class Player : Actor
     public override void Update(Scene scene, float deltaTime)
     {
         base.Update(scene, deltaTime);
-
+        
+        if (Health <= 0)
+        {
+            scene.EndGame();
+            Explode(scene, this);
+            Dead = true;
+        }
+        
         if (invulnerable && damageClock.ElapsedTime.AsMilliseconds() > invulnerableTimer)
         {
             invulnerable = false;
@@ -98,14 +105,7 @@ public class Player : Actor
         if (other is Explosion) return;
         if (invulnerable) return;
         
-        Console.WriteLine(other.ToString());
-        
         base.CollideWith(scene, other);
-        
-        if (Health <= 0)
-        {
-            scene.EndGame();
-        }
         
         sprite.Color = Color.Red;
         invulnerable = true;

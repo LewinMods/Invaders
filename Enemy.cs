@@ -38,6 +38,12 @@ public class Enemy : Actor
 
     public override void Update(Scene scene, float deltaTime)
     {
+        if (Health <= 0)
+        {
+            Explode(scene, this);
+            Dead = true;
+        }
+        
         if (Position.X >= Program.ScreenWidth - sprite.Origin.X)
         {
             Direction = new Vector2f(-1, 1);

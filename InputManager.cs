@@ -4,34 +4,29 @@ namespace Invaders;
 
 public class InputManager
 {
-    private Dictionary<string, bool> previousKeyStates = new();
-    private List<string> keys;
+    private Dictionary<Keyboard.Key, bool> KeyStates = new();
 
-    public InputManager(List<string> keys)
+    public InputManager(Window window)
     {
-        this.keys = keys;
-        
-        foreach (var key in keys)
+        window.KeyPressed += (sender, args) =>
         {
-            previousKeyStates[key] = false;
-        }
+            KeyStates[args.Code] = true;
+        };
+        
+        window.KeyReleased += (sender, args) =>
+        {
+            KeyStates[args.Code] = false;
+        };
     }
 
     public void Update(Scene scene)
     {
-        foreach (var key in keys)
+        foreach (var key in KeyStates)
         {
-            if (Enum.TryParse(key, true, out Keyboard.Key keyEnum))
+            if (key.Value)
             {
-                bool isPressed = Keyboard.IsKeyPressed(keyEnum);
-                bool wasPressed = previousKeyStates[key];
-                
-                if (isPressed && !wasPressed)
-                {
-                    scene.Events.PublishInputHit(key);
-                }
-                
-                previousKeyStates[key] = isPressed;
+                scene.Events.PublishInputHit(key.Key.ToString());
+                KeyStates[key.Key] = false;
             }
         }
     }
