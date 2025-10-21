@@ -9,7 +9,7 @@ public class Button : Entity
     private GAMESTATE gameState;
     private string name;
 
-    private Text buttonText;
+    public Text buttonText;
 
     public Button(GAMESTATE gameState, string name) : base("button")
     {
@@ -28,8 +28,8 @@ public class Button : Entity
         
         buttonText.Font = scene.Assets.LoadFont("ARIAL");
         buttonText.DisplayedString = name;
-        
-        buttonText.Position = Position + new Vector2f(Program.ScreenWidth / 2, 0) - buttonText.GetLocalBounds().Size/2;
+
+        buttonText.Position = Position;
 
         scene.Events.InputHit += ButtonPress;
     }
@@ -59,9 +59,8 @@ public class Button : Entity
         }
         else
         {
-            sprite.Color = Color.Black;
+            sprite.Color = Color.Blue;
         }
-        
     }
 
     public override void Destroy(Scene scene)

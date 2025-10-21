@@ -55,27 +55,17 @@ public abstract class Actor : Movable
         if (other is Bullet bullet && bullet.parent != this)
         {
             bullet.Dead = true;
-            Health -= 1;
+            scene.Events.PublishTakeDamage(this);
         }
 
         else if (other is Player || other is Enemy)
         {
-            Health -= 1;
-        }
-        
-        if (Health <= 0)
-        {
-            Explode(scene, this);
+            scene.Events.PublishTakeDamage(this);
         }
     }
 
-    private void Explode(Scene scene, Actor hit)
+    public void Explode(Scene scene, Actor hit)
     {
         scene.Spawn(new Explosion() {Position = hit.Position - new Vector2f(380 / 4, 347 / 4)});
-
-        if (hit is Enemy)
-        {
-            Dead = true;
-        }
     }
 }

@@ -12,6 +12,7 @@ public class GameGUI : Entity
     public GameGUI() : base("player")
     {
         scoreLabel = new Text();
+        ZIndex = 5;
     }
     
     public override void Create(Scene scene)
