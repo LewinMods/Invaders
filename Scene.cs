@@ -11,7 +11,7 @@ public sealed class Scene
     public readonly AssetManager Assets;
     public readonly EventManager Events;
     public readonly SaveFile SaveFile;
-    public readonly InputManager Inputs;
+    private readonly InputManager Inputs;
     public readonly MusicHandler MusicHandler;
 
     public Clock? clock;
@@ -89,7 +89,7 @@ public sealed class Scene
                 clock.Restart();
                 Spawn(new Enemy());
                 
-                bufferTime = Math.Clamp((int)MathF.Floor(bufferTime * 0.98f), 500, 1000);
+                bufferTime = Math.Clamp((int)MathF.Floor(bufferTime * 0.99f), 600, 1000);
             }
         }
         

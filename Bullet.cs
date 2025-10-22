@@ -44,7 +44,7 @@ public class Bullet : Movable
     {
         base.Update(scene, deltaTime);
 
-        if (clock.ElapsedTime.AsSeconds() > time + 10)
+        if (clock.ElapsedTime.AsSeconds() > time + 3)
         {
             Dead = true;
         }

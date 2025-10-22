@@ -15,13 +15,18 @@ namespace Invaders;
         static void Main(string[] args) 
         {
             using (window = new RenderWindow(
-                       new VideoMode(ScreenWidth, ScreenHeight), "Invaders")) 
+                       new VideoMode(ScreenWidth, ScreenHeight), "Invaders"))
             {
-                window.Closed += (o, e) => window.Close();
+                Scene scene = new Scene();
+                
+                window.Closed += (o, e) =>
+                {
+                    scene.MusicHandler.music.Stop();
+                    scene.MusicHandler.music.Dispose();
+                    window.Close();
+                };
                 
                 window.SetFramerateLimit(60);
-
-                Scene scene = new Scene();
 
                 Clock clock = new Clock();
                 
