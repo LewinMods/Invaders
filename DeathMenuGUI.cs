@@ -29,6 +29,7 @@ public class DeathMenuGUI : GUI
         
         text.Font = scene.Assets.LoadFont("ARIAL");
         text.DisplayedString = "";
+        text.CharacterSize = 24;
         
         Answertext.Font = scene.Assets.LoadFont("ARIAL");
         Answertext.DisplayedString = answerText;
@@ -57,7 +58,7 @@ public class DeathMenuGUI : GUI
             scene.Events.InputHit += Writing;
             CreateButtons(scene);
             buttons[0].isHovered = false;
-            text.DisplayedString = "Enter your name (5 letters max)";
+            text.DisplayedString = "New Highscore! Enter your name (5 letters max)";
             text.Position = new Vector2f((Program.ScreenWidth - text.GetGlobalBounds().Width) / 2, 200 - text.GetGlobalBounds().Height * 2f);
         }
         else
@@ -85,19 +86,20 @@ public class DeathMenuGUI : GUI
             
             scene.SaveFile.Save(answerText, scene.Score);
             answerText = "";
+            text.DisplayedString = "";
         }
         
         else if (key == "BackSpace" && answerText.Length > 0)
         {
             answerText = answerText.Substring(0, answerText.Length - 1);
-            Answertext.DisplayedString = answerText;
         }
         
         else if (acceptableKey.Contains(key.ToLower()) && answerText.Length < 5)
         {
             answerText += key;
-            Answertext.DisplayedString = answerText;
         }
+        
+        Answertext.DisplayedString = answerText;
         
         FloatRect bounds = Answertext.GetLocalBounds();
         Answertext.Origin = new Vector2f(bounds.Width / 2f, bounds.Height / 2f);

@@ -22,8 +22,6 @@ public abstract class Entity
         set => sprite.Position = value;
     }
 
-    public virtual bool Solid => false;
-
     public virtual void Create(Scene scene)
     {
         sprite.Texture = scene.Assets.LoadTexture(textureName);

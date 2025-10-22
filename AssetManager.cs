@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using System.Collections.Generic;
+using SFML.Audio;
 
 namespace Invaders;
 
@@ -8,11 +9,13 @@ public class AssetManager
     public static readonly string AssetPath = "assets";
     private readonly Dictionary<string, Texture> textures;
     private readonly Dictionary<string, Font> fonts;
+    private readonly Dictionary<string, Music> sounds;
 
     public AssetManager()
     {
         textures = new Dictionary<string, Texture>();
         fonts = new Dictionary<string, Font>();
+        sounds = new Dictionary<string, Music>();
     }
 
     public Texture LoadTexture(string name)
@@ -37,5 +40,17 @@ public class AssetManager
         Font font = new Font($"{AssetPath}/{name}.ttf");
         fonts[name] = font;
         return font;
+    }
+    
+    public Music LoadSounds(string name)
+    {
+        if (sounds.TryGetValue(name, out Music foundSoundBuffer))
+        {
+            return foundSoundBuffer;
+        }
+     
+        Music sound = new Music($"{AssetPath}/{name}.wav");
+        sounds[name] = sound;
+        return sound;
     }
 }

@@ -12,6 +12,7 @@ public sealed class Scene
     public readonly EventManager Events;
     public readonly SaveFile SaveFile;
     public readonly InputManager Inputs;
+    public readonly MusicHandler MusicHandler;
 
     public Clock? clock;
     private int bufferTime = 2000;
@@ -31,6 +32,7 @@ public sealed class Scene
         Events = new EventManager();
         SaveFile = new SaveFile("SaveFile");
         Inputs = new InputManager();
+        MusicHandler = new MusicHandler(this, "music");
         
         nextScene = GAMESTATE.MAINMENU;
 

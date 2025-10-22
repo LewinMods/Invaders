@@ -14,6 +14,9 @@ public class Close : GUI
     {
         buttonAmount = 0;
         
+        scene.MusicHandler.music.Stop();
+        scene.MusicHandler.music.Dispose();
+        
         Program.window.Close();
     }
 }
