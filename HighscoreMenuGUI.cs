@@ -5,7 +5,7 @@ namespace Invaders;
 
 public class HighscoreMenuGUI : GUI
 {
-    List<Text> scoreText = new List<Text>();
+    private List<Text> scoreText = new List<Text>();
     
     public HighscoreMenuGUI() : base("button")
     {
